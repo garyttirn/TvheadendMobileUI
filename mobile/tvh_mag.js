@@ -21,7 +21,7 @@ var channelTags;
 var hourOffset = 4;
 var channelOffset = 0;
 var selectedTag = '';
-var numChannels = 4;
+var numChannels = 6;
 var channelToColumn = new Array();
 var selectedDay = new Date(new Date().getTime()-hourOffset*60*60*1000);
 var channelNameToId = new Array();
@@ -82,13 +82,18 @@ function readEpg(response) {
 				var td = document.getElementById(box+'_'+window.channelToColumn[uuid]); 
 				var xclass = nvl(e.dvrState);
 				var yclass = (start.getHours() == 20 || start.getHours() == 21)  && (e.stop-e.start) > 60*60 ? 'primetime' : '';
-				var add = e.schedstate != undefined ? '<br />&nbsp;' : '';
+				var add = xclass != undefined ? '<br />&nbsp;' : '';
 				var epis = e.episodeOnscreen != undefined ? ' <span class="episode">'+e.episodeOnscreen+'</span>' : '';
+				var html = '';
 				var html = '<tr class="item" start="'+e.start+'" duration="'+(e.stop-e.start)+'"><td class="time '+xclass+'">' + getTimeFromTimestamp(e.start) + add + '</td>\n<td class="content '+yclass+'" id="e_'+e.eventId+'"><div class="title"><a onclick="showHide(\'e_'+e.eventId+'\');">'+e.title+epis+'</a></div><div class="subtitle" onclick="showHide(\'e_'+e.eventId+'\');">'+nvl(e.subtitle)+'</div><div onclick="showHide(\'e_'+e.eventId+'\');" class="description">'+nvl(e.description)+'</div><div class="duration">'+getDuration(e.stop-e.start)+l('hour.short')+' &mdash; '+getTimeFromTimestamp(e.stop)+'</div><div class="action">';
-				if (e.dvrState == 'scheduled' || e.dvrState == 'recording')
+				if (e.dvrState == 'scheduled' || e.dvrState == 'recording') {
+					html = '<tr class="scheduled" start="'+e.start+'" duration="'+(e.stop-e.start)+'"><td class="time '+xclass+'">' + getTimeFromTimestamp(e.start) + add + '</td>\n<td class="content '+yclass+'" id="e_'+e.eventId+'"><div class="title"><a onclick="showHide(\'e_'+e.eventId+'\');">'+e.title+epis+'</a></div><div class="subtitle" onclick="showHide(\'e_'+e.eventId+'\');">'+nvl(e.subtitle)+'</div><div onclick="showHide(\'e_'+e.eventId+'\');" class="description">'+nvl(e.description)+'</div><div class="duration">'+getDuration(e.stop-e.start)+l('hour.short')+' &mdash; '+getTimeFromTimestamp(e.stop)+'</div><div class="action">';
 					html += '<input type="button" value="'+l('cancel')+'" onclick="cancel('+e.eventId+', \''+e.dvrUuid+'\',\''+e.channelName+'\');" />';
-				else
+				}
+				else {
+					html = '<tr class="item" start="'+e.start+'" duration="'+(e.stop-e.start)+'"><td class="time '+xclass+'">' + getTimeFromTimestamp(e.start) + add + '</td>\n<td class="content '+yclass+'" id="e_'+e.eventId+'"><div class="title"><a onclick="showHide(\'e_'+e.eventId+'\');">'+e.title+epis+'</a></div><div class="subtitle" onclick="showHide(\'e_'+e.eventId+'\');">'+nvl(e.subtitle)+'</div><div onclick="showHide(\'e_'+e.eventId+'\');" class="description">'+nvl(e.description)+'</div><div class="duration">'+getDuration(e.stop-e.start)+l('hour.short')+' &mdash; '+getTimeFromTimestamp(e.stop)+'</div><div class="action">';
 					html += '<form>'+configSelect + '<br /><input type="button" value="'+l('record')+'" onclick="record('+e.eventId+', this, \''+e.channelName+'\');"/></form>';
+				}
 				html += '</div></td></tr>';
 				td.innerHTML += html;
 			}
@@ -156,7 +161,7 @@ function initEpg() {
 			var ch = channels[i];
 			if (selectedTag == '' || (','+ch.tags+',').indexOf(','+selectedTag+',') >= 0) {
 				if (cnt-channelOffset >= 0 && cnt-channelOffset < numChannels) {
-					var html = '<div><span class="link" onclick="showHide(\'s_'+(cnt-channelOffset)+'\');">'+image(getIcon(ch), 'middle',50,false) + ch.name + '</span>';
+					var html = '<div><span class="link" onclick="showHide(\'s_'+(cnt-channelOffset)+'\');">'+image(getIcon(ch), 'middle',50,false) + '<br>' + ch.name + '</span>';
 					if (cnt-channelOffset==numChannels-1) {
 						html += '<span class="link" style="float:right;" onclick="pageChannels(+1);">'+icon('images/resultset_next.png')+'</span>';
 					}

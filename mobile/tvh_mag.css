@@ -92,6 +92,7 @@ div.subtitle {
 }
 
 td.scheduled {
+	color:#990000!important;
 	background: url('../icons/clock.png') no-repeat 10px 20px;
 	min-height:36px;
 }
@@ -112,8 +113,12 @@ div.description {
 }
 
 tr.current {
-  color:#990000!important;
+	color:#009900!important;
 }
+
+tr.scheduled {
+   color:#990000!important;
+ }
 
 table.inner td.big div.action,
 table.inner td.big div.duration {
@@ -126,6 +131,7 @@ div.action input {
 }
 
 td.recording {
+	color:#990000!important;
 	background: url('../icons/rec.png') no-repeat 10px 20px;
 	min-height:36px;
 }
